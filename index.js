@@ -4,42 +4,56 @@ const app = express()
 app.use(express.json())
 
 
-let posts = [
-    { id: 1, titulo: "Mi primer post", contenido: "Contenido del primer post" },
-    { id: 2, titulo: "Segundo post", contenido: "Contenido del segundo post" },
-    { id: 3, titulo: "Tercer post", contenido: "Contenido del tercer post" }
+let usuarios = [
+    {id: 1, nombre: "Brian", email: "brian@gmail.com"},
+    {id: 2, nombre: "Carol", email: "carol@gmail.com"},
+    {id: 3, nombre: "Zahian", email: "zahian@gmail.com"},
 ]
 
+app.get('/usuarios', function(req,res){
+    res.json(usuarios)
+})
 
-//////// GET
-app.get('/posts', function(req,res){
-    res.json(posts)
-}
-)
-
-app.get('/posts/:id', function(req, res){
-    let cajon = posts.find(function(caja){
+app.get('/usuarios/:id', function(req,res){
+    let usuario = usuarios.find(function(caja){
         return caja.id === Number(req.params.id)
     })
-    if (cajon){
-            res.json(cajon)
+    if (usuario){
+        res.json(usuario)
+    }else{
+        res.status(404).json("usuario no encontrado")
+    }
+})
+
+
+app.post("/usuarios", function(req,res){
+    let usuarioNuevo = {id: usuarios.length+1, nombre: req.body.nombre , email: req.body.email}
+    usuarios.push(usuarioNuevo)
+    res.status(201).json(usuarioNuevo)
+})
+
+app.put("/usuarios/:id", function(req,res){
+    let actualizacionUsuario = usuarios.find(function(caja){
+        return caja.id === Number(req.params.id)
+    })
+    if(actualizacionUsuario){
+        actualizacionUsuario.nombre = req.body.nombre
+        actualizacionUsuario.email = req.body.email
+        res.json(actualizacionUsuario)
     }
     else{
-        res.status(404).json('el valor ingresado no existe')
+        res.status(404).json('no se encontro el usuario que quieres actualizar')
     }
-    
-})
-
-//////////POST 
-app.post("/posts", function(req, res){
-    let postNuevo = {id: posts.length+1, titulo: req.body.titulo, contenido: req.body.contenido}
-    posts.push(postNuevo)
-    res.status(201).json(postNuevo)
 })
 
 
-
-
+app.delete("/usuarios/:id", function(req, res){
+    let borraUsuario = usuarios.filter(function(caja){
+        return caja.id !== Number(req.params.id)
+    })
+    usuarios = borraUsuario
+    res.json({mensaje: "usuario eliminado"})
+})
 
 
 
