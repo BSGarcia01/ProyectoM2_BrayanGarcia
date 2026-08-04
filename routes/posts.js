@@ -1,8 +1,10 @@
 const express = require('express')
 const router = express.Router()
 const pool = require('../db/config')
+const validadores = require("../validators/posts")
 
-// GET /posts - traer todos
+
+
 router.get('/', async function(req, res){
     try {
         const result = await pool.query('SELECT * FROM posts ORDER BY id')
@@ -30,9 +32,19 @@ router.get('/:id', async function(req, res){
 // POST /posts - crear uno nuevo
 router.post('/', async function(req, res){
     const { titulo, contenido, usuario_id } = req.body
-    if (!titulo || !contenido || !usuario_id) {
-        return res.status(400).json({ error: 'Título, contenido y usuario_id son requeridos' })
+    const errorTitulo = validadores.validarTitulo(titulo)
+    if (errorTitulo) {
+        return res.status(400).json({ error: errorTitulo })
     }
+    const errorContenido = validadores.validarContenido(contenido)
+    if (errorContenido) {
+        return res.status(400).json({ error: errorContenido })
+    }
+    const errorUsuarioId = validadores.validarUsuarioId(usuario_id)
+    if (errorUsuarioId){
+        return res.status(400).json({error: errorUsuarioId})
+    }
+    
     try {
         const result = await pool.query(
             'INSERT INTO posts (titulo, contenido, usuario_id) VALUES ($1, $2, $3) RETURNING *',

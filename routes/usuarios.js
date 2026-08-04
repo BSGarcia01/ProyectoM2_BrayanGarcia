@@ -2,6 +2,7 @@
 const express = require('express')
 const router = express.Router()
 const pool = require('../db/config')
+const validadores = require('../validators/usuarios')
 
 
 router.get('/', async function(req, res){
@@ -30,9 +31,15 @@ router.get('/:id', async function(req, res){
 
 
 router.post('/', async function(req, res){
-    const { nombre, email } = req.body
-    if (!nombre || !email) {
-        return res.status(400).json({ error: 'Nombre y email son requeridos' })
+    const {nombre, email} = req.body
+
+    const errorNombre = validadores.validarNombre(nombre)
+    if (errorNombre) {
+        return res.status(400).json({ error: errorNombre})
+    }
+    const errorEmail = validadores.validarEmail(email)
+    if(errorEmail){
+        return res.status(400).json({ error: errorEmail})
     }
     try {
         const result = await pool.query(
