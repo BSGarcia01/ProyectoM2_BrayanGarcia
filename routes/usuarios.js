@@ -41,6 +41,7 @@ router.post('/', async function(req, res){
     if(errorEmail){
         return res.status(400).json({ error: errorEmail})
     }
+    
     try {
         const result = await pool.query(
             'INSERT INTO usuarios (nombre, email) VALUES ($1, $2) RETURNING *',

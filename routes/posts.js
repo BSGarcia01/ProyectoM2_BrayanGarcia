@@ -15,7 +15,7 @@ router.get('/', async function(req, res){
     }
 })
 
-// GET /posts/:id - traer uno específico
+
 router.get('/:id', async function(req, res){
     try {
         const result = await pool.query('SELECT * FROM posts WHERE id = $1', [req.params.id])
@@ -29,7 +29,7 @@ router.get('/:id', async function(req, res){
     }
 })
 
-// POST /posts - crear uno nuevo
+
 router.post('/', async function(req, res){
     const { titulo, contenido, usuario_id } = req.body
     const errorTitulo = validadores.validarTitulo(titulo)
@@ -60,7 +60,7 @@ router.post('/', async function(req, res){
     }
 })
 
-// PUT /posts/:id - actualizar uno existente
+
 router.put('/:id', async function(req, res){
     const { titulo, contenido } = req.body
     try {
@@ -78,7 +78,7 @@ router.put('/:id', async function(req, res){
     }
 })
 
-// DELETE /posts/:id - borrar uno existente
+
 router.delete('/:id', async function(req, res){
     try {
         const result = await pool.query('DELETE FROM posts WHERE id = $1', [req.params.id])
