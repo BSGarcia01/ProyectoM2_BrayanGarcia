@@ -250,6 +250,38 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+  /posts/usuario/{usuarioId}:
+    get:
+      summary: Obtener los posts de un usuario con detalle de su autor
+      parameters:
+        - name: usuarioId
+          in: path
+          required: true
+          description: ID del usuario autor
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lista de posts del usuario con detalle del autor
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PostConAutor'
+        '404':
+          description: El usuario no existe o no tiene posts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Error del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
   /posts/{id}:
     get:
       summary: Obtener un post por su ID
@@ -383,6 +415,25 @@ components:
         usuario_id:
           type: integer
           description: ID del usuario autor
+    PostConAutor:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID único del post
+        titulo:
+          type: string
+          description: Título del post
+        contenido:
+          type: string
+          description: Contenido del post
+        autor:
+          type: string
+          description: Nombre del usuario autor
+        email:
+          type: string
+          format: email
+          description: Email del usuario autor
     Error:
       type: object
       properties:

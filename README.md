@@ -83,6 +83,7 @@ ProyectoM2_BrayanGarcia/
 |---|---|---|
 | GET | /posts | Listar todos los posts |
 | GET | /posts/:id | Detalle de un post específico |
+| GET | /posts/usuario/:usuarioId | Posts de un usuario con detalle de su autor |
 | POST | /posts | Crear un nuevo post |
 | PUT | /posts/:id | Actualizar un post existente |
 | DELETE | /posts/:id | Eliminar un post |
@@ -169,6 +170,7 @@ Este comando primero ejecuta el `seed.sql` (dejando la base en un estado conocid
 - `GET /posts` devuelve los 3 posts de ejemplo.
 - `POST /posts` crea un post (201).
 - `POST /posts` con un `usuario_id` inexistente devuelve `404`.
+- `GET /posts/usuario/:usuarioId` devuelve los posts de un usuario con el detalle de su autor (200), y `404` si el usuario no existe o no tiene posts.
 
 ## 10. Documentación OpenAPI
 
@@ -182,7 +184,7 @@ El proyecto está desplegado en Railway, incluyendo tanto la API como la base de
 
 1. Se creó un proyecto en Railway y se conectó al repositorio de GitHub.
 2. Se agregó un servicio de PostgreSQL dentro del mismo proyecto de Railway.
-3. Se configuraron las variables de entorno en el panel de Railway (equivalentes a las de `.env`). El `db/config.js` usa automáticamente la `DATABASE_URL` si existe (con SSL), o en su defecto las variables individuales `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER` y `DB_PASSWORD`.
+3. Se configuraron las variables de entorno en el panel de Railway (equivalentes a las de `.env`). El `db/config.js` usa automáticamente la `DATABASE_URL` si existe (con SSL), o en su defecto las variables individuales `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER` y `DB_PASSWORD`. Railway genera también una URL interna (`postgres.railway.internal`) para comunicación entre servicios dentro del mismo proyecto, aunque desde internet se accede con la URL pública del proxy (`railway.app`).
 4. Railway detecta el `package.json` y ejecuta `node index.js` para levantar el servidor automáticamente.
 5. Se ejecutaron los scripts `db/setup.sql` y `db/seed.sql` contra la base de datos en la nube.
 6. Railway expone una URL pública para acceder a la API desde internet.

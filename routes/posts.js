@@ -16,6 +16,25 @@ router.get('/', async function(req, res){
 })
 
 
+router.get('/usuario/:usuarioId', async function(req, res){
+    try {
+        const result = await pool.query(
+            `SELECT posts.id, posts.titulo, posts.contenido, usuarios.nombre AS autor, usuarios.email
+             FROM posts JOIN usuarios ON posts.usuario_id = usuarios.id
+             WHERE posts.usuario_id = $1`,
+            [req.params.usuarioId]
+        )
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'El usuario no existe o no tiene posts' })
+        }
+        res.json(result.rows)
+    } catch (error) {
+        console.error('Error obteniendo posts del usuario:', error)
+        res.status(500).json({ error: 'Error obteniendo posts del usuario' })
+    }
+})
+
+
 router.get('/:id', async function(req, res){
     try {
         const result = await pool.query('SELECT * FROM posts WHERE id = $1', [req.params.id])
